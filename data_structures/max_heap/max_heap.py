@@ -4,6 +4,11 @@ from typing import List
 A heap is just a tree which has a method heapify that will reorganize the structure to satisfy 
 a given property of the tree. In the case of the max heap, the parent node my be larger than it's children and the tree must be a complete binary tree.
 """
+class HeapFull(Exception):
+    def __init__(self, message="Heap has reached max capacity."):
+        self.message = message
+        super().__init__(self.message)
+
 
 class MaxHeap:
 
@@ -66,9 +71,17 @@ class MaxHeap:
                 self.swap(pos, self.left_child(pos))
                 self.down_heapify(self.left_child(pos))
 
-        
+    def heapify_up(self, pos: int):
+        if (pos == 0):
+            return
 
+        if (self.heap[pos] > self.heap[self.parent(pos)]):
+            self.swap(pos, self.parent(pos))
+            self.heapify_up(self.parent(pos))
 
-    
-    
-    
+    def insert(self, val):
+        if (self.heap.size == self.max_size):
+            raise HeapFull()
+        self.heap[self.size] = val
+        self.size+=1
+        self.heapify_up(self.size)
